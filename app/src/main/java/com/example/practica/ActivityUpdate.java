@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.practica.Configuracion.SQLiteConexion;
 import com.example.practica.Configuracion.Transacciones;
@@ -53,14 +54,10 @@ public class ActivityUpdate extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    nombre = String.valueOf(edtNombre);
-                    telefono = String.valueOf(edtTelefono);
-                    nota = String.valueOf(edtNota);
-
-                    if(image.length != 0 && !nombre.trim().isEmpty() &&
-                            !telefono.trim().isEmpty() && !nota.trim().isEmpty()){
-
+                    if(idContact != 0){
                         updateContact(idContact);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "no hay datos para borrar", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -90,16 +87,19 @@ public class ActivityUpdate extends AppCompatActivity {
         SQLiteDatabase db = Conexion.getWritableDatabase();
 
         // Nuevos valores para las columnas
-        String Nombre = String.valueOf(edtNombre);
-        String Telefono = String.valueOf(edtTelefono);
-        String Nota = String.valueOf(edtNota);
-
         ContentValues values = new ContentValues();
-        values.put(Transacciones.foto, image);
-        values.put(Transacciones.nombre, pais);
-        values.put(Transacciones.nombre, Nombre);
-        values.put(Transacciones.telefono, Telefono);
-        values.put(Transacciones.nota, Nota);
+        //Validar si se ingreso un dato de lo contrario es porque no se actualizara
+        if (nombre != null && !nombre.isEmpty()) {
+            values.put(Transacciones.nombre, nombre);
+        }if (telefono != null && !telefono.isEmpty()) {
+            values.put(Transacciones.telefono, telefono);
+        }if (nota != null && !nota.isEmpty()) {
+            values.put(Transacciones.nota, nota);
+        }if (pais != null && !pais.isEmpty()) {
+            values.put(Transacciones.pais, pais);
+        }if (image != null && image.length > 0) {
+            values.put(Transacciones.foto, image);
+        }
 
         String selection = Transacciones.id+ " = ?";
         String[] selectionArgs = { String.valueOf(id) };
