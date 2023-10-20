@@ -1,16 +1,29 @@
 package com.example.practica;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -18,7 +31,10 @@ import com.example.practica.Configuracion.SQLiteConexion;
 import com.example.practica.Configuracion.Transacciones;
 import com.example.practica.Models.Contactos;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ActivityUpdate extends AppCompatActivity {
     EditText edtNombre, edtTelefono, edtNota;
@@ -26,6 +42,7 @@ public class ActivityUpdate extends AppCompatActivity {
     Button btnActualizar;
     ArrayList<Contactos> ListCountry;
     ArrayList<String> ArregloContactos;
+    ImageView Img;
     Spinner spinner;
     private int idContact;
     private String nombre;
@@ -34,6 +51,9 @@ public class ActivityUpdate extends AppCompatActivity {
     private String pais;
     private byte[] image;
 
+    static final int Peticion_AccesoCamara = 101;
+    static final int Peticion_TomarFoto = 102;
+    String currentPhotoPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +63,12 @@ public class ActivityUpdate extends AppCompatActivity {
         edtNota = (EditText) findViewById(R.id.edtNota);
         btnActualizar = (Button)findViewById(R.id.btnUpdate);
         spinner = (Spinner)findViewById(R.id.SpinnerAct);
+        Img = (ImageView)findViewById(R.id.imgActualizar);
+
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.country_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
         try {
             Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
@@ -71,6 +95,7 @@ public class ActivityUpdate extends AppCompatActivity {
                     nombre = ListCountry.get(i).getNombre();
                     telefono = String.valueOf(ListCountry.get(i).getTelefono());
                     nota = ListCountry.get(i).getNota();
+
                 }
 
                 @Override
@@ -82,6 +107,15 @@ public class ActivityUpdate extends AppCompatActivity {
         }catch (Exception ex){
             ex.printStackTrace();
         }
+
+
+        Img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Permisos();
+            }
+        });
     }
 
     private void updateContact(int id){
@@ -139,5 +173,108 @@ public class ActivityUpdate extends AppCompatActivity {
 //            edtNota.setText(nota);
 //        }
         Cursor.close();
+    }
+
+
+    //Imagen
+
+
+    private void Permisos() {
+        if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+
+        {
+
+            ActivityCompat.requestPermissions(this, new String[]{   Manifest.permission.CAMERA},
+                    Peticion_AccesoCamara);
+
+        }
+        else
+        {
+            //Tomar foto
+            dispatchTakePictureIntent();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == Peticion_AccesoCamara){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //Tomar foto
+                dispatchTakePictureIntent();
+            }else{
+                Toast.makeText(getApplicationContext(), "Permiso denegado", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                //Proveedor de contenido- Provaider(Ofrece mecanismos para compartir archivos entre app
+                //
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.practica.fileprovider", /*Se obtiene del build gradle Module(Ayuda a definir que pertenece a esta aplicación)*/
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, Peticion_TomarFoto);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        //Añade a formato JPEG
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        //Accede al directorio de las imagenes
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        //Crea un formato jpg
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        //Capturar url de la img
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Peticion_TomarFoto && resultCode == RESULT_OK){
+            /*
+            *  Bundle extras = data.getExtras(); //Trae respuestas de la data
+            Bitmap image = (Bitmap) extras.get("data");
+            Img.setImageBitmap(image);
+             */
+
+            try {
+                File foto = new File(currentPhotoPath);
+                Img.setImageURI(Uri.fromFile(foto));
+
+            }catch (Exception ex) {
+                ex.toString();
+            }
+
+        }
+
     }
 }

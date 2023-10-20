@@ -17,16 +17,12 @@
             android:layout_height="455dp"
             android:layout_marginTop="40dp"
             app:layout_constraintStart_toStartOf="parent"
-
             app:layout_constraintTop_toBottomOf="@+id/btnBuscar"
             tools:ignore="MissingConstraints" >
 
-            <Button
-                android:id="@+id/btnActualizar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00897B"
-                android:text="Actualizar contacto" />
+
+
+
         </ListView>
 
         <Button
@@ -95,6 +91,12 @@
                 android:backgroundTint="#00897B"
                 android:text="  Eliminar contacto "
                 tools:ignore="MissingConstraints" />
+            <Button
+                android:id="@+id/btnActualizar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00897B"
+                android:text="Actualizar contacto" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

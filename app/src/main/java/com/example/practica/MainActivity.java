@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void AddContact () {
         try {
-            if (Img != null) {
+            if (currentPhotoPath!= null) {
                 // Llamar la conexion
                 SQLiteConexion Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
                 // Escribir

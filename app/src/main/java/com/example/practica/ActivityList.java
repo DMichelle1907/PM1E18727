@@ -28,7 +28,7 @@ public class ActivityList extends AppCompatActivity {
     ArrayList<Contactos> ListCountry;
     ArrayList<String> ArregloContactos;
     private int idContact;
-    Button btnCompartir, btnActualizar, btnEliminar, btnVer;
+    Button btnCompartir, btnActualizar, btnEliminar, btnVer, btnBuscar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class ActivityList extends AppCompatActivity {
         btnCompartir = (Button) findViewById(R.id.btnCompartir);
         btnVer = (Button) findViewById(R.id.btnVer);
         btnActualizar = (Button) findViewById(R.id.btnActualizar);
+        btnBuscar = (Button) findViewById(R.id.btnBuscar);
 
         try {
             Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
@@ -49,21 +50,15 @@ public class ActivityList extends AppCompatActivity {
 
             ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_list_item_1, ArregloContactos);
             ListView.setAdapter(adp);
-            //
             ListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     final String ItemName = ListCountry.get(position).getNombre();
                     final int telefono = ListCountry.get(position).getTelefono();
-
-                    // Mostrar un AlertDialog para confirmar la llamada
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityList.this);
                     builder.setMessage("¿Llamar a " + ItemName + "?")
                             .setPositiveButton("Llamar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    // Aquí puedes agregar la lógica para realizar la llamada
-                                    // Puedes usar Intent para hacer una llamada telefónica
-                                    // por ejemplo:
                                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + telefono));
                                     startActivity(intent);
 
@@ -79,7 +74,7 @@ public class ActivityList extends AppCompatActivity {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
 
-                    return true; // Importante: devuelve true para indicar que el evento de clic largo ha sido manejado.
+                    return true;
                 }
             });
 
@@ -90,6 +85,9 @@ public class ActivityList extends AppCompatActivity {
 
                 }
             });
+
+
+
         } catch (Exception ex) {
             ex.toString();
         }
@@ -120,7 +118,7 @@ public class ActivityList extends AppCompatActivity {
             }
         };
         btnActualizar.setOnClickListener(butonclik);
-      //  btnEliminar.setOnClickListener(butonclik);
+         btnEliminar.setOnClickListener(butonclik);
          btnVer.setOnClickListener(butonclik);
         btnCompartir.setOnClickListener(butonclik);
 
@@ -130,11 +128,8 @@ public class ActivityList extends AppCompatActivity {
 
         SQLiteDatabase db = Conexion.getWritableDatabase();
         try {
-            //Seleccionar el valor del campo en la bd con el que se borrara el registro
             String selection = Transacciones.id + " = ?";
-            //Asignar el valor del registro para comparar con el de la bd
             String[] selectionArgs = {String.valueOf(id)};
-            //Hacer la busqueda de comparacion para eliminar un registro especifico
             int deletedRows = db.delete(Transacciones.table, selection, selectionArgs);
 
             if(deletedRows > 0){
@@ -179,4 +174,6 @@ public class ActivityList extends AppCompatActivity {
                     ListCountry.get(i).getTelefono());
         }
     }
+
+
 }
