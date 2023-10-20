@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Practica</string>
+    <string-array name="country_array">
+        <item>Honduras</item>
+        <item>El Salvador</item>
+        <item>Guatemala</item>
+        <item>Nicaragua</item>
+        <item>Costa Rica</item>
+    </string-array>
+</resources>

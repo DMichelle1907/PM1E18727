@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <shape xmlns:android="http://schemas.android.com/apk/res/android">
+        <solid android:color="#00ACC1" /> <!-- Color de fondo del botón -->
+        <corners android:radius="0dp" /> <!-- Sin radio en las esquinas (cuadrado) -->
+    </shape>
+</selector>
