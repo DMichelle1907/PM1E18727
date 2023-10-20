@@ -26,10 +26,12 @@ public class ActivityUpdate extends AppCompatActivity {
     ArrayList<Contactos> ListCountry;
     ArrayList<String> ArregloContactos;
     Spinner spinner;
-
-    private String Nombre;
-    private String Telefono;
-    private String Nota;
+    private int idContact;
+    private String nombre;
+    private String telefono;
+    private String nota;
+    private String pais;
+    private byte[] image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +53,14 @@ public class ActivityUpdate extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Nombre = String.valueOf(edtNombre);
-                    Telefono = String.valueOf(edtTelefono);
-                    Nota = String.valueOf(edtNota);
+                    nombre = String.valueOf(edtNombre);
+                    telefono = String.valueOf(edtTelefono);
+                    nota = String.valueOf(edtNota);
 
-                    if(Nombre != "" && Telefono != "" && Nota != ""){
+                    if(image.length != 0 && !nombre.trim().isEmpty() &&
+                            !telefono.trim().isEmpty() && !nota.trim().isEmpty()){
 
-//                        updateContact();
+                        updateContact(idContact);
                     }
                 }
             });
@@ -65,7 +68,11 @@ public class ActivityUpdate extends AppCompatActivity {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                    image = ListCountry.get(i).getImg();
+                    pais = ListCountry.get(i).getPais();
+                    nombre = ListCountry.get(i).getNombre();
+                    telefono = String.valueOf(ListCountry.get(i).getTelefono());
+                    nota = ListCountry.get(i).getNota();
                 }
 
                 @Override
@@ -88,19 +95,20 @@ public class ActivityUpdate extends AppCompatActivity {
         String Nota = String.valueOf(edtNota);
 
         ContentValues values = new ContentValues();
+        values.put(Transacciones.foto, image);
+        values.put(Transacciones.nombre, pais);
         values.put(Transacciones.nombre, Nombre);
         values.put(Transacciones.telefono, Telefono);
         values.put(Transacciones.nota, Nota);
 
-//        Which row to update, based on the title
-//        String selection = Transacciones.table+ " = ?";
-//        String[] selectionArgs = { String.valueOf(id) };
-//
-//        int count = db.update(
-//                Conexion.,
-//                values,
-//                selection,
-//                selectionArgs);
+        String selection = Transacciones.id+ " = ?";
+        String[] selectionArgs = { String.valueOf(id) };
+
+        int count = db.update(
+                Transacciones.table,
+                values,
+                selection,
+                selectionArgs);
     }
 
     private void GetCountry() {
@@ -115,8 +123,8 @@ public class ActivityUpdate extends AppCompatActivity {
             Country.setTelefono(Cursor.getInt(2));
             Country.setNota(Cursor.getString(3));
             Country.setPais(Cursor.getString(4));
-            byte[] imageBytes = Cursor.getBlob(5);
-            Country.setImg(imageBytes);
+            image = Cursor.getBlob(5);
+            Country.setImg(image);
             ListCountry.add(Country);
         }
 //        while (Cursor.moveToNext()) {

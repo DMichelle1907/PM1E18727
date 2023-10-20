@@ -19,7 +19,15 @@
             app:layout_constraintStart_toStartOf="parent"
 
             app:layout_constraintTop_toBottomOf="@+id/btnBuscar"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints" >
+
+            <Button
+                android:id="@+id/btnActualizar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00897B"
+                android:text="Actualizar contacto" />
+        </ListView>
 
         <Button
             android:id="@+id/btnBuscar"
@@ -41,16 +49,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnBuscar"
             tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/btnActualizar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00897B"
-            android:text="Actualizar contacto"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
