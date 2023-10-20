@@ -20,24 +20,28 @@ import com.example.practica.Configuracion.Transacciones;
 import com.example.practica.Models.Contactos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ActivityList extends AppCompatActivity {
     SQLiteConexion Conexion;
     ListView ListView;
     ArrayList<Contactos> ListCountry;
     ArrayList<String> ArregloContactos;
-
+    private int idContact;
     Button btnCompartir, btnActualizar, btnEliminar, btnVer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+
         btnActualizar = (Button) findViewById(R.id.btnActualizar);
         btnEliminar = (Button) findViewById(R.id.btnEliminar);
         btnCompartir = (Button) findViewById(R.id.btnCompartir);
         btnVer = (Button) findViewById(R.id.btnVer);
         btnActualizar = (Button) findViewById(R.id.btnActualizar);
+
         try {
             Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
             ListView = (ListView) findViewById(R.id.ListView);
@@ -79,7 +83,13 @@ public class ActivityList extends AppCompatActivity {
                 }
             });
 
+            ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    idContact = ListCountry.get(i).getId();
 
+                }
+            });
         } catch (Exception ex) {
             ex.toString();
         }
@@ -96,7 +106,13 @@ public class ActivityList extends AppCompatActivity {
                 } else if (v.getId() == R.id.btnVer) {
                     actividad = ActivityVFoto.class;
                 }
-
+                else if(v.getId() == R.id.btnEliminar){
+                    if (idContact != 0) {
+                        deletContact(idContact);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
+                    }
+                }
                 if (actividad != null) {
                     NoveActivity(actividad);
                 }
@@ -109,6 +125,26 @@ public class ActivityList extends AppCompatActivity {
         btnCompartir.setOnClickListener(butonclik);
 
     }
+    //Metodo para eliminar registro
+    private void deletContact(int id) {
+
+        SQLiteDatabase db = Conexion.getWritableDatabase();
+        try {
+            //Seleccionar el valor del campo en la bd con el que se borrara el registro
+            String selection = Transacciones.id + " = ?";
+            //Asignar el valor del registro para comparar con el de la bd
+            String[] selectionArgs = {String.valueOf(id)};
+            //Hacer la busqueda de comparacion para eliminar un registro especifico
+            int deletedRows = db.delete(Transacciones.table, selection, selectionArgs);
+
+            if(deletedRows > 0){
+                Toast.makeText(this, "Contacto eliminado", Toast.LENGTH_LONG).show();
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
     private void NoveActivity(Class<?> actividad) {
         Intent intent = new Intent(getApplicationContext(), actividad);
         startActivity(intent);

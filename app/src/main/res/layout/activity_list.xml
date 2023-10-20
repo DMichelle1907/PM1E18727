@@ -13,22 +13,20 @@
 
         <ListView
             android:id="@+id/ListView"
-            android:layout_width="398dp"
-            android:layout_height="543dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnBuscar"
-            app:layout_constraintVertical_bias="0.12"
+            android:layout_width="0dp"
+            android:layout_height="455dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
 
-            tools:layout_editor_absoluteX="2dp"
+            app:layout_constraintTop_toBottomOf="@+id/btnBuscar"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/btnBuscar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buscar"
             android:backgroundTint="#00897B"
+            android:text="Buscar"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints" />
 
@@ -36,57 +34,70 @@
             android:id="@+id/edtBuscar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#00897B"
             android:ems="10"
             android:hint="Buscar"
             android:inputType="text"
-            android:backgroundTint="#00897B"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnBuscar"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/btnCompartir"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Compartir contacto"
-            android:backgroundTint="#00897B"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ListView"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/btnEliminar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  Eliminar contacto "
-            android:backgroundTint="#00897B"
-            app:layout_constraintTop_toBottomOf="@+id/btnCompartir"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="2dp" />
-
-        <Button
-            android:id="@+id/btnVer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="          Ver Foto           "
-            app:layout_constraintEnd_toEndOf="parent"
-            android:backgroundTint="#00897B"
-            app:layout_constraintHorizontal_bias="0.759"
-            app:layout_constraintStart_toEndOf="@+id/btnCompartir"
-            app:layout_constraintTop_toBottomOf="@+id/ListView"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/btnActualizar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:text="Actualizar contacto"
-            app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="#00897B"
-            app:layout_constraintHorizontal_bias="0.757"
-            app:layout_constraintStart_toEndOf="@+id/btnEliminar"
-            app:layout_constraintTop_toBottomOf="@+id/btnVer" />
+            android:text="Actualizar contacto"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="0dp"
+            android:layout_height="51dp"
+            android:layout_marginBottom="116dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/btnCompartir"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00897B"
+                android:text="Compartir contacto"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/btnVer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00897B"
+                android:text="          Ver Foto           "
+                tools:ignore="MissingConstraints" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="52dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout2">
+
+            <Button
+                android:id="@+id/btnEliminar"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00897B"
+                android:text="  Eliminar contacto "
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
