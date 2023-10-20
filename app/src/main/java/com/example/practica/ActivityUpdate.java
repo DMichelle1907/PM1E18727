@@ -65,6 +65,7 @@ public class ActivityUpdate extends AppCompatActivity {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    idContact = ListCountry.get(i).getId();
                     image = ListCountry.get(i).getImg();
                     pais = ListCountry.get(i).getPais();
                     nombre = ListCountry.get(i).getNombre();
