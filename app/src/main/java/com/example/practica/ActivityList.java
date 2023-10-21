@@ -97,7 +97,7 @@ public class ActivityList extends AppCompatActivity {
                     }if(ListCountry.get(i).getImg() != null && ListCountry.get(i).getImg().length != 0){
                         pasarDatosAct.putExtra("imagen", ListCountry.get(i).getImg());
                     }
-                    startActivity(pasarDatosAct);
+
                 }
             });
 
@@ -115,6 +115,7 @@ public class ActivityList extends AppCompatActivity {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
                     if(idContact != 0){
+                        startActivity(pasarDatosAct);
                         actividad = ActivityUpdate.class;
                     } else {
                         Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
