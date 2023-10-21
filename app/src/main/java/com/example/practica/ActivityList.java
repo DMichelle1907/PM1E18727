@@ -121,13 +121,13 @@ public class ActivityList extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
                     }
                 }  else if (v.getId() == R.id.btnCompartir) {
-                   // actividad = ActivityCom.class;
+
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT,"Compartir Contacto" );
                     sendIntent.setType("text/plain");
                     Intent shareIntent = Intent.createChooser(sendIntent, null);
-                    startActivity(shareIntent);
+                    startActivity(Intent.createChooser(shareIntent, null));
 
                 } else if (v.getId() == R.id.btnVer) {
                     actividad = ActivityVFoto.class;
