@@ -115,11 +115,9 @@ public class ActivityList extends AppCompatActivity {
             public void onClick(View v) {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
-                    if(idContact != 0){
+
                         actividad = ActivityUpdate.class;
-                    } else {
-                        Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
-                    }
+
                 }  else if (v.getId() == R.id.btnCompartir) {
                     if(!nombreContacto.isEmpty() && telefonoContacto != 0 && !paisContacto.isEmpty()){
                         // mensaje que incluye los detalles del contacto
