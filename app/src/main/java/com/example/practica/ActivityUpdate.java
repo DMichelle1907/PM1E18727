@@ -47,11 +47,6 @@ public class ActivityUpdate extends AppCompatActivity {
     ImageView Img;
     Spinner spinner;
     private int idContact;
-    private String nombre;
-    private int telefono;
-    private String nota;
-    private String pais;
-    private byte[] image;
 
     static final int Peticion_AccesoCamara = 101;
     static final int Peticion_TomarFoto = 102;
@@ -80,18 +75,13 @@ public class ActivityUpdate extends AppCompatActivity {
             Intent obtenerDatos = getIntent();
 
             idContact = obtenerDatos.getIntExtra("id", 0);
-            nombre = obtenerDatos.getStringExtra("nombre");
-            telefono = obtenerDatos.getIntExtra("telefono", 0);
-            pais = obtenerDatos.getStringExtra("pais");
-            nota = obtenerDatos.getStringExtra("nota");
-            image = obtenerDatos.getByteArrayExtra("imagen");
 
-            Bitmap viewImage = BitmapFactory.decodeByteArray(image,0,image.length);
+            Bitmap viewImage = BitmapFactory.decodeByteArray(obtenerDatos.getByteArrayExtra("imagen"),0,obtenerDatos.getByteArrayExtra("imagen").length);
 
-            edtNombre.setText(nombre);
-            edtTelefono.setText(telefono);
-            edtPais.setText(pais);
-            edtNota.setText(nota);
+            edtNombre.setText(obtenerDatos.getStringExtra("nombre"));
+            edtTelefono.setText(obtenerDatos.getIntExtra("telefono", 0));
+            edtPais.setText(obtenerDatos.getStringExtra("pais"));
+            edtNota.setText(obtenerDatos.getStringExtra("nota"));
             Img.setImageBitmap(viewImage);
 
             btnActualizar.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +89,7 @@ public class ActivityUpdate extends AppCompatActivity {
                 public void onClick(View v) {
 
                     if(idContact != 0){
-                        updateContact(idContact,currentPhotoPath,pais,nombre,telefono,nota);
+                        updateContact(idContact,currentPhotoPath, String.valueOf(edtPais), String.valueOf(edtNombre),edtTelefono, String.valueOf(edtNota));
                     }else{
                         Toast.makeText(getApplicationContext(), "no hay datos para borrar", Toast.LENGTH_LONG).show();
                     }
@@ -138,7 +128,7 @@ public class ActivityUpdate extends AppCompatActivity {
         });
     }
 
-    private void updateContact(int id, String image,String pais,String nombre,int telefono,String nota){
+    private void updateContact(int id, String image, String pais, String nombre, EditText telefono, String nota){
         SQLiteDatabase db = Conexion.getWritableDatabase();
 
         // Nuevos valores para las columnas
@@ -146,8 +136,8 @@ public class ActivityUpdate extends AppCompatActivity {
         //Validar si se ingreso un dato de lo contrario es porque no se actualizara
         if (nombre != null && !nombre.isEmpty()) {
             values.put(Transacciones.nombre, nombre);
-        }if (telefono != 0) {
-            values.put(Transacciones.telefono, telefono);
+        }if (telefono != null) {
+            values.put(Transacciones.telefono, String.valueOf(telefono));
         }if (nota != null && !nota.isEmpty()) {
             values.put(Transacciones.nota, nota);
         }if (pais != null && !pais.isEmpty()) {
@@ -164,6 +154,8 @@ public class ActivityUpdate extends AppCompatActivity {
                 values,
                 selection,
                 selectionArgs);
+
+
     }
 
     private void GetCountry() {

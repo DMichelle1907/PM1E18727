@@ -30,7 +30,7 @@ public class ActivityList extends AppCompatActivity {
     private int idContact;
     Button btnCompartir, btnActualizar, btnEliminar, btnVer, btnBuscar;
 
-    private final Intent pasarDatosAct = new Intent(getApplicationContext(), ActivityUpdate.class);
+    private Intent pasarDatosAct = new Intent(this, ActivityUpdate.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class ActivityList extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     idContact = ListCountry.get(i).getId();
                     if(ListCountry.get(i).getId() != null && ListCountry.get(i).getId() != 0) {
+                        Toast.makeText(getApplicationContext(),ListCountry.get(i).getNombre(), Toast.LENGTH_LONG).show();
                         pasarDatosAct.putExtra("id", ListCountry.get(i).getId());
                     }if(ListCountry.get(i).getNombre() != null && !ListCountry.get(i).getNombre().isEmpty()){
                         pasarDatosAct.putExtra("nombre", ListCountry.get(i).getNombre());
@@ -96,6 +97,7 @@ public class ActivityList extends AppCompatActivity {
                     }if(ListCountry.get(i).getImg() != null && ListCountry.get(i).getImg().length != 0){
                         pasarDatosAct.putExtra("imagen", ListCountry.get(i).getImg());
                     }
+                    startActivity(pasarDatosAct);
                 }
             });
 
@@ -112,8 +114,11 @@ public class ActivityList extends AppCompatActivity {
             public void onClick(View v) {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
-                    startActivity(pasarDatosAct);
-                    actividad = ActivityUpdate.class;
+                    if(idContact != 0){
+                        actividad = ActivityUpdate.class;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
+                    }
                 }  else if (v.getId() == R.id.btnCompartir) {
                    // actividad = ActivityCom.class;
                 } else if (v.getId() == R.id.btnVer) {
