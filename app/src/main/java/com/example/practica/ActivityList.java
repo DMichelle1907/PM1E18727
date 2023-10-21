@@ -94,7 +94,7 @@ public class ActivityList extends AppCompatActivity {
                         agruparDatos.putString("nota", ListCountry.get(i).getNota());
                         agruparDatos.putByteArray("imagen", ListCountry.get(i).getImg());
                         pasarDatosAct.putExtras(agruparDatos);
-                    startActivity(pasarDatosAct);
+
 
                     nombreContacto = ListCountry.get(i).getNombre();
                     telefonoContacto = ListCountry.get(i).getTelefono();
@@ -115,7 +115,7 @@ public class ActivityList extends AppCompatActivity {
             public void onClick(View v) {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
-
+                    startActivity(pasarDatosAct);
                         actividad = ActivityUpdate.class;
 
                 }  else if (v.getId() == R.id.btnCompartir) {
