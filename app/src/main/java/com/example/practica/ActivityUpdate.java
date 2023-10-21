@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ActivityUpdate extends AppCompatActivity {
-    EditText edtNombre, edtTelefono, edtNota;
+    EditText edtNombre, edtTelefono, edtNota, edtPais;
     SQLiteConexion Conexion;
     Button btnActualizar;
     ArrayList<Contactos> ListCountry;
@@ -46,7 +48,7 @@ public class ActivityUpdate extends AppCompatActivity {
     Spinner spinner;
     private int idContact;
     private String nombre;
-    private String telefono;
+    private int telefono;
     private String nota;
     private String pais;
     private byte[] image;
@@ -60,7 +62,8 @@ public class ActivityUpdate extends AppCompatActivity {
         setContentView(R.layout.activity_update);
         edtNombre = (EditText) findViewById(R.id.edtNombre);
         edtTelefono = (EditText) findViewById(R.id.edtTelefono);
-        edtNota = (EditText) findViewById(R.id.edtNota);
+        edtNota = (EditText) findViewById(R.id.edtnota);
+        edtPais = (EditText) findViewById(R.id.edtPais);
         btnActualizar = (Button)findViewById(R.id.btnUpdate);
         spinner = (Spinner)findViewById(R.id.SpinnerAct);
         Img = (ImageView)findViewById(R.id.imgActualizar);
@@ -74,12 +77,29 @@ public class ActivityUpdate extends AppCompatActivity {
             Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
             GetCountry();
 
+            Intent obtenerDatos = getIntent();
+
+            idContact = obtenerDatos.getIntExtra("id", 0);
+            nombre = obtenerDatos.getStringExtra("nombre");
+            telefono = obtenerDatos.getIntExtra("telefono", 0);
+            pais = obtenerDatos.getStringExtra("pais");
+            nota = obtenerDatos.getStringExtra("nota");
+            image = obtenerDatos.getByteArrayExtra("imagen");
+
+            Bitmap viewImage = BitmapFactory.decodeByteArray(image,0,image.length);
+
+            edtNombre.setText(nombre);
+            edtTelefono.setText(telefono);
+            edtPais.setText(pais);
+            edtNota.setText(nota);
+            Img.setImageBitmap(viewImage);
+
             btnActualizar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if(idContact != 0){
-                        updateContact(idContact);
+                        updateContact(idContact,currentPhotoPath,pais,nombre,telefono,nota);
                     }else{
                         Toast.makeText(getApplicationContext(), "no hay datos para borrar", Toast.LENGTH_LONG).show();
                     }
@@ -89,12 +109,12 @@ public class ActivityUpdate extends AppCompatActivity {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    idContact = ListCountry.get(i).getId();
-                    image = ListCountry.get(i).getImg();
-                    pais = ListCountry.get(i).getPais();
-                    nombre = ListCountry.get(i).getNombre();
-                    telefono = String.valueOf(ListCountry.get(i).getTelefono());
-                    nota = ListCountry.get(i).getNota();
+//                    idContact = ListCountry.get(i).getId();
+//                    image = ListCountry.get(i).getImg();
+//                    pais = ListCountry.get(i).getPais();
+//                    nombre = ListCountry.get(i).getNombre();
+//                    telefono = String.valueOf(ListCountry.get(i).getTelefono());
+//                    nota = ListCountry.get(i).getNota();
 
                 }
 
@@ -118,7 +138,7 @@ public class ActivityUpdate extends AppCompatActivity {
         });
     }
 
-    private void updateContact(int id){
+    private void updateContact(int id, String image,String pais,String nombre,int telefono,String nota){
         SQLiteDatabase db = Conexion.getWritableDatabase();
 
         // Nuevos valores para las columnas
@@ -126,13 +146,13 @@ public class ActivityUpdate extends AppCompatActivity {
         //Validar si se ingreso un dato de lo contrario es porque no se actualizara
         if (nombre != null && !nombre.isEmpty()) {
             values.put(Transacciones.nombre, nombre);
-        }if (telefono != null && !telefono.isEmpty()) {
+        }if (telefono != 0) {
             values.put(Transacciones.telefono, telefono);
         }if (nota != null && !nota.isEmpty()) {
             values.put(Transacciones.nota, nota);
         }if (pais != null && !pais.isEmpty()) {
             values.put(Transacciones.pais, pais);
-        }if (image != null && image.length > 0) {
+        }if (image != null && !image.isEmpty()) {
             values.put(Transacciones.foto, image);
         }
 
@@ -153,13 +173,7 @@ public class ActivityUpdate extends AppCompatActivity {
         Cursor Cursor = db.rawQuery(Transacciones.SelectTableContactos, null);
         while (Cursor.moveToNext()) {
             Country = new Contactos();
-            Country.setId(Cursor.getInt(0));
-            Country.setNombre(Cursor.getString(1));
-            Country.setTelefono(Cursor.getInt(2));
-            Country.setNota(Cursor.getString(3));
             Country.setPais(Cursor.getString(4));
-            image = Cursor.getBlob(5);
-            Country.setImg(image);
             ListCountry.add(Country);
         }
 //        while (Cursor.moveToNext()) {

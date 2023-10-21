@@ -30,6 +30,8 @@ public class ActivityList extends AppCompatActivity {
     private int idContact;
     Button btnCompartir, btnActualizar, btnEliminar, btnVer, btnBuscar;
 
+    private final Intent pasarDatosAct = new Intent(getApplicationContext(), ActivityUpdate.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,14 +79,26 @@ public class ActivityList extends AppCompatActivity {
                     return true;
                 }
             });
-
             ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     idContact = ListCountry.get(i).getId();
-
+                    if(ListCountry.get(i).getId() != null && ListCountry.get(i).getId() != 0) {
+                        pasarDatosAct.putExtra("id", ListCountry.get(i).getId());
+                    }if(ListCountry.get(i).getNombre() != null && !ListCountry.get(i).getNombre().isEmpty()){
+                        pasarDatosAct.putExtra("nombre", ListCountry.get(i).getNombre());
+                    }if(ListCountry.get(i).getTelefono() != null && ListCountry.get(i).getTelefono() != 0){
+                        pasarDatosAct.putExtra("telefono", ListCountry.get(i).getTelefono());
+                    }if(ListCountry.get(i).getPais() != null && !ListCountry.get(i).getPais().isEmpty()){
+                        pasarDatosAct.putExtra("pais", ListCountry.get(i).getPais());
+                    }if(ListCountry.get(i).getNota() != null && !ListCountry.get(i).getNota().isEmpty()){
+                        pasarDatosAct.putExtra("nota", ListCountry.get(i).getNota());
+                    }if(ListCountry.get(i).getImg() != null && ListCountry.get(i).getImg().length != 0){
+                        pasarDatosAct.putExtra("imagen", ListCountry.get(i).getImg());
+                    }
                 }
             });
+
 
 
 
@@ -98,6 +112,7 @@ public class ActivityList extends AppCompatActivity {
             public void onClick(View v) {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
+                    startActivity(pasarDatosAct);
                     actividad = ActivityUpdate.class;
                 }  else if (v.getId() == R.id.btnCompartir) {
                    // actividad = ActivityCom.class;

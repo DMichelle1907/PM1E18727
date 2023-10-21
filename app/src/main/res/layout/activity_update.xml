@@ -7,11 +7,14 @@
     tools:context=".ActivityUpdate">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="428dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -30,47 +33,66 @@
 
         <EditText
             android:id="@+id/edtNombre"
-            android:layout_width="260dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
+            android:layout_marginBottom="15dp"
             android:ems="10"
             android:inputType="text"
             android:text="" />
 
         <EditText
             android:id="@+id/edtTelefono"
-            android:layout_width="260dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="" />
-
-        <EditText
-            android:id="@+id/edtNota"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:ems="10"
             android:inputType="text"
             android:text="" />
 
         <Spinner
             android:id="@+id/SpinnerAct"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content" />
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp" />
 
-        <ImageView
-            android:id="@+id/imgActualizar"
-            android:layout_width="match_parent"
-            android:layout_height="168dp"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <Button
-            android:id="@+id/btnUpdate"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/edtPais"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:backgroundTint="#00897B"
-            android:text="Actualizar contacto" />
+            android:ems="10"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtnota"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgActualizar"
+        android:layout_width="match_parent"
+        android:layout_height="168dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnUpdate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00897B"
+        android:text="Actualizar contacto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.937" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
