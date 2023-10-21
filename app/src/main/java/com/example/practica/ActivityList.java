@@ -122,6 +122,13 @@ public class ActivityList extends AppCompatActivity {
                     }
                 }  else if (v.getId() == R.id.btnCompartir) {
                    // actividad = ActivityCom.class;
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT,"Compartir Contacto" );
+                    sendIntent.setType("text/plain");
+                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                    startActivity(shareIntent);
+
                 } else if (v.getId() == R.id.btnVer) {
                     actividad = ActivityVFoto.class;
                 }

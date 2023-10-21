@@ -80,8 +80,8 @@ public class ActivityUpdate extends AppCompatActivity {
 
             edtNombre.setText(obtenerDatos.getStringExtra("nombre"));
             edtTelefono.setText(obtenerDatos.getIntExtra("telefono", 0));
-            edtPais.setText(obtenerDatos.getCharSequenceExtra("pais"));
-            edtNota.setText(obtenerDatos.getCharSequenceExtra("nota"));
+            edtPais.setText(obtenerDatos.getStringExtra("pais"));
+            edtNota.setText(obtenerDatos.getStringExtra("nota"));
             Img.setImageBitmap(viewImage);
 
             btnActualizar.setOnClickListener(new View.OnClickListener() {

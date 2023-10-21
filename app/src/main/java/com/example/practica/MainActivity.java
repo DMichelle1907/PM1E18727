@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 Valores.put(Transacciones.telefono, edtTelefono.getText().toString());
                 Valores.put(Transacciones.nota, edtNota.getText().toString());
                 Valores.put(Transacciones.pais, pais.getSelectedItem().toString());
-                Valores.put(Transacciones.foto, fotoTomada);
+                Valores.put(Transacciones.foto, currentPhotoPath);
 
                 Long Result = db.insert(Transacciones.table, Transacciones.id, Valores);
 
