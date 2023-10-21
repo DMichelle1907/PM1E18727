@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -21,17 +22,20 @@ import com.example.practica.Models.Contactos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ActivityList extends AppCompatActivity {
     SQLiteConexion Conexion;
     ListView ListView;
     ArrayList<Contactos> ListCountry;
     ArrayList<String> ArregloContactos;
+    ArrayAdapter<String> adapter;
     private int idContact;
     Button btnCompartir, btnActualizar, btnEliminar, btnVer, btnBuscar;
 
-    private final Intent pasarDatosAct = new Intent(getApplicationContext(), ActivityUpdate.class);
+    private Intent pasarDatosAct = new Intent(this, ActivityUpdate.class);
 
+    EditText edtBuscar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +48,16 @@ public class ActivityList extends AppCompatActivity {
         btnVer = (Button) findViewById(R.id.btnVer);
         btnActualizar = (Button) findViewById(R.id.btnActualizar);
         btnBuscar = (Button) findViewById(R.id.btnBuscar);
+        edtBuscar = (EditText) findViewById(R.id.edtBuscar);
+        ListView = (ListView) findViewById(R.id.ListView);
 
         try {
-            Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
-            ListView = (ListView) findViewById(R.id.ListView);
-            GetCountry();
 
+            Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
+            GetCountry();
             ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_list_item_1, ArregloContactos);
             ListView.setAdapter(adp);
+
             ListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,7 +102,10 @@ public class ActivityList extends AppCompatActivity {
                     }if(ListCountry.get(i).getImg() != null && ListCountry.get(i).getImg().length != 0){
                         pasarDatosAct.putExtra("imagen", ListCountry.get(i).getImg());
                     }
+
+
                 }
+
             });
 
 
@@ -112,16 +121,24 @@ public class ActivityList extends AppCompatActivity {
             public void onClick(View v) {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
-                    startActivity(pasarDatosAct);
-                    actividad = ActivityUpdate.class;
+                    if (idContact != 0) {
+                        startActivity(pasarDatosAct);
+                        actividad = ActivityUpdate.class;
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No hay datos para actualizar", Toast.LENGTH_LONG).show();
+                    }
+
                 }  else if (v.getId() == R.id.btnCompartir) {
                    // actividad = ActivityCom.class;
                 } else if (v.getId() == R.id.btnVer) {
                     actividad = ActivityVFoto.class;
                 }
                 else if(v.getId() == R.id.btnEliminar){
+
                     if (idContact != 0) {
                         deletContact(idContact);
+
+
                     } else {
                         Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
                     }
@@ -137,8 +154,43 @@ public class ActivityList extends AppCompatActivity {
          btnVer.setOnClickListener(butonclik);
         btnCompartir.setOnClickListener(butonclik);
 
+
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String busqueda = edtBuscar.getText().toString();
+                buscar(busqueda);
+
+
+            }
+        });
+
+
     }
+
+
     //Metodo para eliminar registro
+
+    private void buscar(String busqueda) {
+        ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_list_item_1, ArregloContactos);
+        ListView.setAdapter(adp);
+        List<Contactos> fillList = new ArrayList<>();
+        for (Contactos contact : ListCountry) {
+            String nombre = contact.getNombre().toLowerCase();
+            String telefono = String.valueOf(contact.getTelefono());
+            if (nombre.contains(busqueda.toLowerCase()) || telefono.contains(busqueda.toLowerCase())) {
+                fillList.add(contact);
+            }
+        }
+        List<String> fillContact = new ArrayList<>();
+        for (Contactos contact : fillList) {
+            fillContact .add(contact.getId() + " - " + contact.getNombre() + " - " + contact.getTelefono());
+        }
+
+        adp.clear();
+        adp.addAll(fillContact );
+        adp.notifyDataSetChanged();
+    }
     private void deletContact(int id) {
 
         SQLiteDatabase db = Conexion.getWritableDatabase();
@@ -153,6 +205,8 @@ public class ActivityList extends AppCompatActivity {
         }catch(Exception ex){
             ex.printStackTrace();
         }
+
+
     }
 
     private void NoveActivity(Class<?> actividad) {
