@@ -87,7 +87,6 @@ public class ActivityUpdate extends AppCompatActivity {
             btnActualizar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if(idContact != 0){
                         updateContact(idContact,currentPhotoPath, String.valueOf(edtPais), String.valueOf(edtNombre),edtTelefono, String.valueOf(edtNota));
                     }else{
