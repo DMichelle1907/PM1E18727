@@ -30,13 +30,16 @@ public class ActivityList extends AppCompatActivity {
     private int idContact;
     Button btnCompartir, btnActualizar, btnEliminar, btnVer, btnBuscar;
 
-    private Intent pasarDatosAct = new Intent(this, ActivityUpdate.class);
+    private String nombreContacto;
+    private int telefonoContacto;
+    private String paisContacto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
+        Intent pasarDatosAct = new Intent(this, ActivityUpdate.class);
+        Bundle agruparDatos = new Bundle();
 
         btnActualizar = (Button) findViewById(R.id.btnActualizar);
         btnEliminar = (Button) findViewById(R.id.btnEliminar);
@@ -83,21 +86,19 @@ public class ActivityList extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     idContact = ListCountry.get(i).getId();
-                    if(ListCountry.get(i).getId() != null && ListCountry.get(i).getId() != 0) {
-                        Toast.makeText(getApplicationContext(),ListCountry.get(i).getNombre(), Toast.LENGTH_LONG).show();
-                        pasarDatosAct.putExtra("id", ListCountry.get(i).getId());
-                    }if(ListCountry.get(i).getNombre() != null && !ListCountry.get(i).getNombre().isEmpty()){
-                        pasarDatosAct.putExtra("nombre", ListCountry.get(i).getNombre());
-                    }if(ListCountry.get(i).getTelefono() != null && ListCountry.get(i).getTelefono() != 0){
-                        pasarDatosAct.putExtra("telefono", ListCountry.get(i).getTelefono());
-                    }if(ListCountry.get(i).getPais() != null && !ListCountry.get(i).getPais().isEmpty()){
-                        pasarDatosAct.putExtra("pais", ListCountry.get(i).getPais());
-                    }if(ListCountry.get(i).getNota() != null && !ListCountry.get(i).getNota().isEmpty()){
-                        pasarDatosAct.putExtra("nota", ListCountry.get(i).getNota());
-                    }if(ListCountry.get(i).getImg() != null && ListCountry.get(i).getImg().length != 0){
-                        pasarDatosAct.putExtra("imagen", ListCountry.get(i).getImg());
-                    }
 
+                        agruparDatos.putInt("id", idContact);
+                        agruparDatos.putString("nombre", ListCountry.get(i).getNombre());
+                        agruparDatos.putInt("telefono", ListCountry.get(i).getTelefono());
+                        agruparDatos.putString("pais", ListCountry.get(i).getPais());
+                        agruparDatos.putString("nota", ListCountry.get(i).getNota());
+                        agruparDatos.putByteArray("imagen", ListCountry.get(i).getImg());
+                        pasarDatosAct.putExtras(agruparDatos);
+                    startActivity(pasarDatosAct);
+
+                    nombreContacto = ListCountry.get(i).getNombre();
+                    telefonoContacto = ListCountry.get(i).getTelefono();
+                    paisContacto = ListCountry.get(i).getPais();
                 }
             });
 
@@ -115,19 +116,25 @@ public class ActivityList extends AppCompatActivity {
                 Class<?> actividad = null;
                 if (v.getId() == R.id.btnActualizar) {
                     if(idContact != 0){
-                        startActivity(pasarDatosAct);
                         actividad = ActivityUpdate.class;
                     } else {
                         Toast.makeText(getApplicationContext(), "No hay datos para borrar", Toast.LENGTH_LONG).show();
                     }
                 }  else if (v.getId() == R.id.btnCompartir) {
+                    if(!nombreContacto.isEmpty() && telefonoContacto != 0 && !paisContacto.isEmpty()){
+                        // mensaje que incluye los detalles del contacto
+                        String mensaje = "Nombre: " + nombreContacto + "\nTeléfono: " + telefonoContacto + "\nPaís: " + paisContacto;
 
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT,"Compartir Contacto" );
-                    sendIntent.setType("text/plain");
-                    Intent shareIntent = Intent.createChooser(sendIntent, null);
-                    startActivity(Intent.createChooser(shareIntent, null));
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,mensaje );
+                        sendIntent.setType("text/plain");
+                        Intent shareIntent = Intent.createChooser(sendIntent, "Compartir Contacto");
+                        startActivity(shareIntent);
+
+                    }else {
+                        Toast.makeText(getApplicationContext(), "No hay contacto para compartir", Toast.LENGTH_LONG).show();
+                    }
 
                 } else if (v.getId() == R.id.btnVer) {
                     actividad = ActivityVFoto.class;

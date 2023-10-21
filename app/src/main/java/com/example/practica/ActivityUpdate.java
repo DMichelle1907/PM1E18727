@@ -72,17 +72,20 @@ public class ActivityUpdate extends AppCompatActivity {
             Conexion = new SQLiteConexion(this, Transacciones.namedb, null, 1);
             GetCountry();
 
-            Intent obtenerDatos = getIntent();
+            Bundle obtDatosAgrup = getIntent().getExtras();
 
-            idContact = obtenerDatos.getIntExtra("id", 0);
+            if(obtDatosAgrup != null){
+                idContact = obtDatosAgrup.getInt("id");
 
-            Bitmap viewImage = BitmapFactory.decodeByteArray(obtenerDatos.getByteArrayExtra("imagen"),0,obtenerDatos.getByteArrayExtra("imagen").length);
+                Bitmap viewImage = BitmapFactory.decodeByteArray(obtDatosAgrup.getByteArray("imagen"),0,obtDatosAgrup.getByteArray("imagen").length);
 
-            edtNombre.setText(obtenerDatos.getStringExtra("nombre"));
-            edtTelefono.setText(obtenerDatos.getIntExtra("telefono", 0));
-            edtPais.setText(obtenerDatos.getStringExtra("pais"));
-            edtNota.setText(obtenerDatos.getStringExtra("nota"));
-            Img.setImageBitmap(viewImage);
+                edtNombre.setText(obtDatosAgrup.getString("nombre"));
+                edtTelefono.setText(obtDatosAgrup.getInt("telefono", 0));
+                edtPais.setText(obtDatosAgrup.getString("pais"));
+                edtNota.setText(obtDatosAgrup.getString("nota"));
+                Img.setImageBitmap(viewImage);
+
+            }
 
             btnActualizar.setOnClickListener(new View.OnClickListener() {
                 @Override
